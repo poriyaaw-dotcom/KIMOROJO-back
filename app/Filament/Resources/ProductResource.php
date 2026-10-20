@@ -43,6 +43,21 @@ class ProductResource extends Resource
                     ->default('gold'),
                 
                 TextInput::make('making_charges')->label('Making Charges (Toman)')->required()->numeric(),
+                
+                // NEW: Stock Field
+                TextInput::make('stock')
+                    ->label('Stock (Quantity)')
+                    ->required()
+                    ->numeric()
+                    ->default(0)
+                    ->helperText('Set to 0 to mark as out of stock'),
+                
+                // NEW: Accessories Price Field
+                TextInput::make('accessories_price')
+                    ->label('Accessories Price (Toman)')
+                    ->numeric()
+                    ->default(0)
+                    ->helperText('Price of gems, stones, or attachments (0 if none)'),
 
                 Select::make('category_id')->label('Category')->options(Category::pluck('name_en', 'id'))->required()->searchable(),
                 Select::make('collection_id')->label('Collection')->options(Collection::pluck('name_en', 'id'))->required()->searchable(),
@@ -69,6 +84,16 @@ class ProductResource extends Resource
                 TextColumn::make('metal_type')->label('Metal')->sortable(),
                 TextColumn::make('category.name_en')->label('Category')->sortable(),
                 TextColumn::make('weight')->label('Weight (g)')->sortable(),
+                // NEW: Stock Column in Table
+                TextColumn::make('stock')
+                    ->label('Stock')
+                    ->sortable()
+                    ->badge()
+                    ->color(fn (string $state): string => match (true) {
+                        $state == 0 => 'danger',
+                        $state < 5 => 'warning',
+                        default => 'success',
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -18,6 +18,8 @@ class Product extends Model
         'purity',
         'metal_type',
         'making_charges',
+        'stock',               // <-- ADDED
+        'accessories_price',   // <-- ADDED
         'category_id',
         'collection_id',
         'images',
@@ -27,6 +29,8 @@ class Product extends Model
         'images' => 'array',
         'weight' => 'decimal:2',
         'making_charges' => 'integer',
+        'stock' => 'integer',
+        'accessories_price' => 'decimal:2',
     ];
 
     public function category()
@@ -37,5 +41,11 @@ class Product extends Model
     public function collection()
     {
         return $this->belongsTo(Collection::class);
+    }
+    
+    // Helper method to check if product is in stock
+    public function isInStock(): bool
+    {
+        return $this->stock > 0;
     }
 }
