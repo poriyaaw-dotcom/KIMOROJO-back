@@ -3,18 +3,15 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CategoryResource\Pages;
-use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-
-// Add these imports for the form and table components
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 
 class CategoryResource extends Resource
@@ -27,21 +24,42 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name_en')
-                    ->label('Name (English)')
-                    ->required()
-                    ->maxLength(255),
-                
-                TextInput::make('name_fa')
-                    ->label('Name (Persian)')
-                    ->required()
-                    ->maxLength(255),
-                
-                TextInput::make('slug')
-                    ->label('Slug (e.g., rings, necklaces)')
-                    ->required()
-                    ->maxLength(255)
-                    ->unique(ignoreRecord: true),
+                Section::make('Basic Information')
+                    ->schema([
+                        TextInput::make('name_en')
+                            ->label('Name (English)')
+                            ->required()
+                            ->maxLength(255),
+                        
+                        TextInput::make('name_fa')
+                            ->label('Name (Persian)')
+                            ->required()
+                            ->maxLength(255),
+                        
+                        TextInput::make('slug')
+                            ->label('Slug (e.g., rings, necklaces)')
+                            ->required()
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
+                    ])->columns(2),
+
+                // ADDED: Optional SEO Settings Section
+                Section::make('SEO Settings')
+                    ->description('Optimize this category for search engines. (Optional)')
+                    ->schema([
+                        TextInput::make('meta_title')
+                            ->label('SEO Title')
+                            ->nullable()
+                            ->maxLength(60)
+                            ->helperText('Recommended: 50-60 characters'),
+                        
+                        Textarea::make('meta_description')
+                            ->label('SEO Description')
+                            ->nullable()
+                            ->maxLength(160)
+                            ->rows(3)
+                            ->helperText('Recommended: 150-160 characters'),
+                    ])->columns(2),
             ]);
     }
 
@@ -84,9 +102,7 @@ class CategoryResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

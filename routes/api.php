@@ -8,9 +8,11 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\SettingsController;
 
 // Products API
 Route::get('/products', [ProductController::class, 'index']);
+Route::get('/products/{id}', [ProductController::class, 'show']); // <-- ADDED THIS LINE
 
 // Collections API
 Route::get('/collections', [CollectionController::class, 'index']);
@@ -31,3 +33,10 @@ Route::get('/orders', [OrderController::class, 'index']);
 // Profile API
 Route::get('/profile', [ProfileController::class, 'show']);
 Route::post('/profile', [ProfileController::class, 'update']);
+
+// Settings API
+Route::get('/settings', [SettingsController::class, 'index']);
+
+// Blogs API
+Route::get('/blogs', [\App\Http\Controllers\Api\BlogController::class, 'index']);
+Route::get('/blogs/{slug}', [\App\Http\Controllers\Api\BlogController::class, 'show']);

@@ -4,12 +4,15 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CollectionResource\Pages;
 use App\Models\Collection;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
 
@@ -44,6 +47,22 @@ class CollectionResource extends Resource
                     ->maxSize(5120)
                     ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/jpg', 'image/webp'])
                     ->helperText('Recommended: Square or portrait image (e.g., 800×800px)'),
+
+                // SEO SECTION ADDED HERE
+                Section::make('SEO Settings')
+                    ->description('Optimize this collection for search engines. (Optional)')
+                    ->schema([
+                        TextInput::make('meta_title')
+                            ->label('SEO Title')
+                            ->nullable()
+                            ->maxLength(60),
+                        
+                        Textarea::make('meta_description')
+                            ->label('SEO Description')
+                            ->nullable()
+                            ->maxLength(160)
+                            ->rows(3),
+                    ])->columns(2),
             ]);
     }
 

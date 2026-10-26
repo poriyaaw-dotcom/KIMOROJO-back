@@ -13,10 +13,12 @@ class Collection extends Model
         'name_en',
         'name_fa',
         'slug',
-        'image', // Added this
+        'image',
+        // SEO FIELDS ADDED HERE
+        'meta_title',
+        'meta_description',
     ];
 
-    // A Collection has many Products
     public function products()
     {
         return $this->hasMany(Product::class);

@@ -18,11 +18,15 @@ class Product extends Model
         'purity',
         'metal_type',
         'making_charges',
-        'stock',               // <-- ADDED
-        'accessories_price',   // <-- ADDED
+        'stock',
+        'accessories_price',
         'category_id',
         'collection_id',
         'images',
+        // SEO FIELDS ADDED HERE
+        'slug',
+        'meta_title',
+        'meta_description',
     ];
 
     protected $casts = [
