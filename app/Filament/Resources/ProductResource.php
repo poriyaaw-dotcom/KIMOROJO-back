@@ -15,6 +15,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\TextColumn;
 
 class ProductResource extends Resource
@@ -53,7 +54,7 @@ class ProductResource extends Resource
                             ->required()
                             ->numeric()
                             ->step(0.01)
-                            ->helperText('Enter as a percentage (e.g., 7 for 7% or 0.07)'),
+                            ->helperText('Enter as a percentage (e.g., 20 for 20%)'),
                         
                         TextInput::make('stock')
                             ->label('Stock (Quantity)')
@@ -76,6 +77,28 @@ class ProductResource extends Resource
                             ->options(Collection::pluck('name_en', 'id'))
                             ->nullable()
                             ->searchable(),
+                    ])->columns(3),
+
+                Section::make('Accessories Details')
+                    ->description('Additional charges for gems, stones, or attachments')
+                    ->schema([
+                        TextInput::make('accessories_making_charges')
+                            ->label('Accessories Making Charges (%)')
+                            ->numeric()
+                            ->default(0)
+                            ->step(0.01)
+                            ->helperText('Making charges applied to accessories price (e.g., 10 for 10%)'),
+                        
+                        TextInput::make('accessories_profit')
+                            ->label('Accessories Profit (%)')
+                            ->numeric()
+                            ->default(0)
+                            ->step(0.01)
+                            ->helperText('Profit margin applied to accessories (e.g., 8 for 8%)'),
+                        
+                        Toggle::make('apply_tax_on_accessories')
+                            ->label('Apply Tax on Accessories')
+                            ->helperText('Enable to include VAT on accessories making charges and profit'),
                     ])->columns(3),
 
                 Section::make('Images')

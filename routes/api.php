@@ -40,3 +40,5 @@ Route::get('/settings', [SettingsController::class, 'index']);
 // Blogs API
 Route::get('/blogs', [\App\Http\Controllers\Api\BlogController::class, 'index']);
 Route::get('/blogs/{slug}', [\App\Http\Controllers\Api\BlogController::class, 'show']);
+
+Route::post('/custom-orders', [\App\Http\Controllers\Api\CustomOrderController::class, 'store']);

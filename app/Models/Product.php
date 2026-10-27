@@ -20,6 +20,9 @@ class Product extends Model
         'making_charges',
         'stock',
         'accessories_price',
+        'accessories_making_charges',
+        'accessories_profit',
+        'apply_tax_on_accessories',
         'category_id',
         'collection_id',
         'images',
@@ -32,9 +35,12 @@ class Product extends Model
     protected $casts = [
         'images' => 'array',
         'weight' => 'decimal:2',
-        'making_charges' => 'integer',
+        'making_charges' => 'decimal:2',
         'stock' => 'integer',
         'accessories_price' => 'decimal:2',
+        'accessories_making_charges' => 'decimal:2',
+        'accessories_profit' => 'decimal:2',
+        'apply_tax_on_accessories' => 'boolean',
     ];
 
     public function category()

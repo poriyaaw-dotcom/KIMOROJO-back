@@ -29,10 +29,11 @@ class AddressController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'phone' => 'required|string',
+            // UPDATED: Strict Iranian phone validation for both account phone and contact phone
+            'phone' => ['required', 'string', 'regex:/^(\+98|0)9\d{9}$/'],
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:20',
+            'phone_number' => ['required', 'string', 'regex:/^(\+98|0)9\d{9}$/'],
             'province' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'address' => 'required|string',
@@ -61,7 +62,7 @@ class AddressController extends Controller
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:20',
+            'phone_number' => ['required', 'string', 'regex:/^(\+98|0)9\d{9}$/'],
             'province' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'address' => 'required|string',

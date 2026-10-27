@@ -13,7 +13,7 @@ class Category extends Model
         'name_en',
         'name_fa',
         'slug',
-        // SEO FIELDS ADDED HERE
+        'image', // <-- ADDED THIS
         'meta_title',
         'meta_description',
     ];

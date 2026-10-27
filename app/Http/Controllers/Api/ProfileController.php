@@ -43,7 +43,8 @@ class ProfileController extends Controller
     {
         try {
             $validated = $request->validate([
-                'phone' => 'required|string',
+                // UPDATED: Strict Iranian phone validation
+                'phone' => ['required', 'string', 'regex:/^(\+98|0)9\d{9}$/'],
                 'first_name' => 'required|string|max:255',
                 'last_name' => 'required|string|max:255',
             ]);
@@ -51,7 +52,7 @@ class ProfileController extends Controller
             $user = User::updateOrCreate(
                 ['phone' => $validated['phone']],
                 [
-                    'name' => $validated['first_name'] . ' ' . $validated['last_name'], // <-- ADDED THIS TO FIX THE ERROR
+                    'name' => $validated['first_name'] . ' ' . $validated['last_name'],
                     'first_name' => $validated['first_name'],
                     'last_name' => $validated['last_name'],
                     'email' => $validated['phone'] . '@kimorojo.local', 

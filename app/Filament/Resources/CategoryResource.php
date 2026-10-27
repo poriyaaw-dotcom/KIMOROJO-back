@@ -11,13 +11,14 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ImageColumn;
 
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
@@ -41,9 +42,17 @@ class CategoryResource extends Resource
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
+
+                        // ADDED: Image Upload Field
+                        FileUpload::make('image')
+                            ->label('Category Image')
+                            ->image()
+                            ->directory('categories')
+                            ->maxSize(2048) // 2MB max
+                            ->columnSpanFull()
+                            ->helperText('Recommended: Square or portrait image (e.g., 800x800px)'),
                     ])->columns(2),
 
-                // ADDED: Optional SEO Settings Section
                 Section::make('SEO Settings')
                     ->description('Optimize this category for search engines. (Optional)')
                     ->schema([
@@ -67,6 +76,12 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
+                // ADDED: Image Column in Table
+                ImageColumn::make('image')
+                    ->label('Image')
+                    ->square()
+                    ->size(50),
+                
                 TextColumn::make('name_en')
                     ->label('Name (EN)')
                     ->searchable()
@@ -85,9 +100,6 @@ class CategoryResource extends Resource
                     ->label('Created At')
                     ->dateTime()
                     ->sortable(),
-            ])
-            ->filters([
-                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
