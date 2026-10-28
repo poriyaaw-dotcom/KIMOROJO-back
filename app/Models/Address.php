@@ -2,21 +2,28 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Address extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'phone', 'first_name', 'last_name', 'phone_number', 
-        'province', 'city', 'address', 'postal_code', 'is_default'
+        'user_id',
+        'phone',
+        'first_name',
+        'last_name',
+        'phone_number',
+        'province',
+        'city',
+        'address',
+        'postal_code',
+        'is_default',
     ];
 
-    protected $casts = [
-        'is_default' => 'boolean',
-    ];
-
-    public function orders()
+    public function user()
     {
-        return $this->hasMany(Order::class);
+        return $this->belongsTo(User::class);
     }
 }

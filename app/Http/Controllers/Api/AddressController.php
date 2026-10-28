@@ -8,29 +8,28 @@ use Illuminate\Http\Request;
 
 class AddressController extends Controller
 {
-    // GET /api/addresses?phone=0912...
     public function index(Request $request)
     {
-        $phone = $request->query('phone');
-        
-        if (!$phone) {
-            return response()->json(['success' => false, 'message' => 'Phone number required'], 400);
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Unauthenticated'], 401);
         }
+        
+        $addresses = Address::where('user_id', $user->id)
+            ->orderBy('is_default', 'desc')
+            ->get();
 
-        $addresses = Address::where('phone', $phone)->orderBy('is_default', 'desc')->get();
-
-        return response()->json([
-            'success' => true,
-            'data' => $addresses
-        ]);
+        return response()->json(['success' => true, 'data' => $addresses]);
     }
 
-    // POST /api/addresses
     public function store(Request $request)
     {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Unauthenticated'], 401);
+        }
+
         $validated = $request->validate([
-            // UPDATED: Strict Iranian phone validation for both account phone and contact phone
-            'phone' => ['required', 'string', 'regex:/^(\+98|0)9\d{9}$/'],
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'phone_number' => ['required', 'string', 'regex:/^(\+98|0)9\d{9}$/'],
@@ -42,8 +41,11 @@ class AddressController extends Controller
         ]);
 
         if (!empty($validated['is_default'])) {
-            Address::where('phone', $validated['phone'])->update(['is_default' => false]);
+            Address::where('user_id', $user->id)->update(['is_default' => false]);
         }
+
+        $validated['user_id'] = $user->id;
+        $validated['phone'] = $user->phone;
 
         $address = Address::create($validated);
 
@@ -54,10 +56,14 @@ class AddressController extends Controller
         ], 201);
     }
 
-    // PUT /api/addresses/{id}
     public function update(Request $request, $id)
     {
-        $address = Address::findOrFail($id);
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Unauthenticated'], 401);
+        }
+        
+        $address = Address::where('id', $id)->where('user_id', $user->id)->firstOrFail();
         
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
@@ -71,7 +77,7 @@ class AddressController extends Controller
         ]);
 
         if (!empty($validated['is_default'])) {
-            Address::where('phone', $address->phone)->update(['is_default' => false]);
+            Address::where('user_id', $user->id)->update(['is_default' => false]);
         }
 
         $address->update($validated);
@@ -83,10 +89,14 @@ class AddressController extends Controller
         ]);
     }
 
-    // DELETE /api/addresses/{id}
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        $address = Address::findOrFail($id);
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Unauthenticated'], 401);
+        }
+        
+        $address = Address::where('id', $id)->where('user_id', $user->id)->firstOrFail();
         $address->delete();
 
         return response()->json([

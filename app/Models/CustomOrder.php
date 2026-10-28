@@ -11,13 +11,15 @@ class CustomOrder extends Model
 
     protected $fillable = [
         'user_id',
+        'phone',
+        'address',
         'jewelry_type',
         'metal_type',
         'reference_image',
         'details',
         'budget',
-        // 'status' and 'admin_notes' REMOVED. 
-        // Hackers can no longer fake an "approved" status!
+        'status',
+        'admin_notes',
     ];
 
     public function user()
